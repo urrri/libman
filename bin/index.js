@@ -3,7 +3,7 @@ const path = require('path');
 const { celebrate, Joi, errors } = require('celebrate');
 const config = require('config');
 
-var app = express();
+const app = express();
 
 app.use(config.get('api.public'), express.static(path.join(__dirname, '../public')));
 
