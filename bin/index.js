@@ -1,21 +1,26 @@
 const express = require('express');
-var path = require('path');
-var morgan = require('morgan');
+const path = require('path');
 const { celebrate, Joi, errors } = require('celebrate');
+const config = require('config');
 
 var app = express();
 
-app.use('/public', express.static(path.join(__dirname, '../public')));
+app.use(config.get('api.public'), express.static(path.join(__dirname, '../public')));
 
-app.use(morgan('combined'));
+if (config.get('logger.on')) {
+  //add logger
+  var morgan = require('morgan');
+  app.use(morgan('combined'));
+}
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.use('/api/v1', require('./routes'));
+app.use(config.get('api.rootPath'), require('./routes'));
 
 app.use(errors());
 
-const port = process.env.PORT || 3333;
+const port = process.env.PORT || config.get('api.port') || 3333;
 
 app.listen(port, function (err) {
   if (err) {
