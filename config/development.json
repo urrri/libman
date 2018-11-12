@@ -4,5 +4,8 @@
   },
   "logger": {
     "on": true
+  },
+  "db": {
+    "connectionUri": ""
   }
 }
