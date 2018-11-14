@@ -1,12 +1,22 @@
 const express = require('express');
 const path = require('path');
-const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const config = require('config');
 
 require('dotenv').config();
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_CONNECTION || config.get('db.connectionUri'));
+var db = mongoose.connection;
+
+db.on('error', function (err) {
+  console.error('connection error:', err.message);
+});
+db.once('open', function callback() {
+  console.info("Connected to DB!");
+});
+
+
 
 const app = express();
 

@@ -1,60 +1,62 @@
+const BookModel = require('../models/book.model');
+const pick = require('lodash/pick');
+
 const getBooks = async filter => {
-  return [];
+  return BookModel.find(filter).exec();
 };
 
 const addBook = async book => {
-  // add id
-  book.id = '' + Date.now();
-  //call DB
-  return book;
+
+  return BookModel.create(pick(book, ['title', 'author', 'description', 'published']));
 };
 
 const getBook = async id => {
-  const book = {id};
-  //call db
-  return book;
+  return BookModel.findById(id);
 };
 
 const updateBook = async (id, book) => {
-  const origBook = await getBook(id);
-  book = {
-    ...origBook,
-    ...book
-  };
-  //call db
-  return book;
+  return BookModel.findByIdAndUpdate(id, pick(book, ['title', 'author', 'description', 'published']));
 };
 
 const deleteBook = async (id) => {
-  //call db
+  return BookModel.findByIdAndDelete(id);
 };
 
 const borrowBook = async (id, customerId) => {
-  const origBook = await getBook(id);
-  const now = Date.now();
-  book = {
-    ...origBook,
-    borrowed: true,
-    lastBorrowedBy: customerId,
-    lastBorrowTime: now,
-    borrowCount: origBook.borrowCount + 1,
-    borrowings: origBook.borrowings.push({
-      by: customerId,
-      time: now
-    })
-  };
-  // call db
+  if (!await getBook(id)) {
+    return;  //404
+  }
+  const updated = await BookModel.findOneAndUpdate({_id: id, borrowed: false}, {
+    $set: {
+      borrowed: true,
+      lastBorrowedBy: customerId
+    },
+    $currentDate: {
+      lastBorrowTime: true
+    },
+    $inc: {
+      borrowCount: 1
+    }
+  });
+  if (!updated) {
+    throw 409; //conflict
+  }
+  return updated;
 };
 
 const returnBook = async (id)=> {
-  const origBook = await getBook(id);
-
-  book = {
-    ...origBook,
-    borrowed: false
-  };
-  // call db
-
+  if (!await getBook(id)) {
+    return;  //404
+  }
+  const updated = await BookModel.findOneAndUpdate({_id: id, borrowed: true}, {
+    $set: {
+      borrowed: false
+    }
+  });
+  if (!updated) {
+    throw 409; //conflict
+  }
+  return updated;
 };
 
 module.exports = {

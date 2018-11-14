@@ -3,7 +3,7 @@ const books = require('../controllers/books.ctrl');
 const router = express.Router();
 router.route('/')
   .get(books.getBooks)
-  .post(books.postBook);
+  .post(books.verifyBook, books.postBook);
 
 router.route('/:id')
   .get(books.getBook)

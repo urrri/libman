@@ -1,3 +1,4 @@
+const { celebrate, Joi } = require('celebrate');
 const books = require('../services/books.service');
 
 const getBooks = async (req, res, next) => {
@@ -11,10 +12,17 @@ const getBooks = async (req, res, next) => {
   }
 };
 
-const verifyBook = async (req, res, next) => {
-  console.log('verify book');
-  next();
-};
+const verifyBook = celebrate({
+  body: Joi.object().keys({
+    book: Joi.object().keys({
+      title: Joi.string().required(),
+      author: Joi.string().required(),
+      description: Joi.string(),
+      published: Joi.number().integer(),
+      role: Joi.string().default('admin')
+    })
+  })
+});
 
 const postBook = async (req, res, next) => {
   const {book} = req.body;
@@ -31,7 +39,7 @@ const getBook = async (req, res, next) => {
   const bookId = req.params.id;
   try {
     const result = await books.getBook(bookId);
-    if (result === null) {
+    if (!result) {
       res.sendStatus(404);
     } else {
       res.status(200).json(result);
@@ -47,7 +55,7 @@ const putBook = async (req, res, next) => {
   const {book} = req.body;
   try {
     const result = await books.updateBook(bookId, book);
-    if (result === null) {
+    if (!result) {
       res.sendStatus(404);
     } else {
       res.status(200).json(result);
@@ -84,6 +92,9 @@ const borrowBook = async (req, res, next) => {
     }
     //next()
   } catch (e) {
+    if (typeof e === 'number') {
+      res.sendStatus(e) && next(e);
+    }
     res.sendStatus(500) && next(e)
   }
 };
@@ -99,6 +110,9 @@ const returnBook = async (req, res, next) => {
     }
     //next()
   } catch (e) {
+    if (typeof e === 'number') {
+      res.sendStatus(e) && next(e);
+    }
     res.sendStatus(500) && next(e)
   }
 };
