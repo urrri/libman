@@ -12,14 +12,24 @@ const getBooks = async (req, res, next) => {
   }
 };
 
-const verifyBook = celebrate({
+const verifyNewBook = celebrate({
   body: Joi.object().keys({
     book: Joi.object().keys({
       title: Joi.string().required(),
       author: Joi.string().required(),
       description: Joi.string(),
       published: Joi.number().integer(),
-      role: Joi.string().default('admin')
+    })
+  })
+});
+
+const verifyBook = celebrate({
+  body: Joi.object().keys({
+    book: Joi.object().keys({
+      title: Joi.string(),
+      author: Joi.string(),
+      description: Joi.string(),
+      published: Joi.number().integer(),
     })
   })
 });
@@ -73,7 +83,7 @@ const deleteBook = async (req, res, next) => {
     if (!result) {
       res.sendStatus(404);
     } else {
-      res.sendStatus(200);
+      res.status(200).json(result);
     }
     //next()
   } catch (e) {
@@ -88,7 +98,7 @@ const borrowBook = async (req, res, next) => {
     if (!result) {
       res.sendStatus(404);
     } else {
-      res.sendStatus(200);
+      res.status(200).json(result);
     }
     //next()
   } catch (e) {
@@ -106,7 +116,7 @@ const returnBook = async (req, res, next) => {
     if (!result) {
       res.sendStatus(404);
     } else {
-      res.sendStatus(200);
+      res.status(200).json(result);
     }
     //next()
   } catch (e) {
@@ -119,6 +129,7 @@ const returnBook = async (req, res, next) => {
 
 module.exports = {
   getBooks,
+  verifyNewBook,
   verifyBook,
   postBook,
   getBook,

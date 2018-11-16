@@ -1,13 +1,19 @@
 const BookModel = require('../models/book.model');
 const pick = require('lodash/pick');
 
+const updateParams = {
+  new: true
+};
+
 const getBooks = async filter => {
   return BookModel.find(filter).exec();
 };
 
 const addBook = async book => {
+  book = pick(book, ['title', 'author', 'description', 'published'])
+  console.log("adding book", book);
 
-  return BookModel.create(pick(book, ['title', 'author', 'description', 'published']));
+  return BookModel.create(book);
 };
 
 const getBook = async id => {
@@ -15,7 +21,7 @@ const getBook = async id => {
 };
 
 const updateBook = async (id, book) => {
-  return BookModel.findByIdAndUpdate(id, pick(book, ['title', 'author', 'description', 'published']));
+  return BookModel.findByIdAndUpdate(id, pick(book, ['title', 'author', 'description', 'published']), updateParams);
 };
 
 const deleteBook = async (id) => {
@@ -37,7 +43,7 @@ const borrowBook = async (id, customerId) => {
     $inc: {
       borrowCount: 1
     }
-  });
+  }, updateParams);
   if (!updated) {
     throw 409; //conflict
   }
@@ -52,7 +58,7 @@ const returnBook = async (id)=> {
     $set: {
       borrowed: false
     }
-  });
+  }, updateParams);
   if (!updated) {
     throw 409; //conflict
   }

@@ -6,7 +6,7 @@ const config = require('config');
 require('dotenv').config();
 
 const mongoose = require('mongoose');
-mongoose.connect(process.env.DB_CONNECTION || config.get('db.connectionUri'));
+mongoose.connect(process.env.DB_CONNECTION || config.get('db.connectionUri'), {useNewUrlParser: true});
 var db = mongoose.connection;
 
 db.on('error', function (err) {
@@ -15,7 +15,6 @@ db.on('error', function (err) {
 db.once('open', function callback() {
   console.info("Connected to DB!");
 });
-
 
 
 const app = express();

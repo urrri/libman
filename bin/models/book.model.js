@@ -14,7 +14,7 @@ var Book = new mongoose.Schema({
 
 // validation
 Book.path('title').validate(function (v) {
-  return v.length > 5 && v.length < 70;
+  return v.length > 4 && v.length < 70;
 });
 
 Book.path('description').validate(function (v) {
