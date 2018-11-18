@@ -31,16 +31,16 @@
         const dueDate = (new Date(borrowedAt + 7 * oneDay)).setHours(23, 59, 59, 999);
         const overdue = now >= dueDate;
         return {
-          title: book.title,
-          borrowedBy: book.lastBorrowedBy,
-          borrowCount: book.borrowCount,
-          dueDate: (new Date(dueDate)).toDateString(),
-          overdue
+          'Book Title': book.title,
+          'Borrowed By': book.lastBorrowedBy,
+          'Total Borrowing': book.borrowCount,
+          'Due Date': (new Date(dueDate)).toDateString(),
+          'Overdue': overdue
         }
       } else {
         return {
-          title: book.title,
-          borrowCount: book.borrowCount
+          'Book Title': book.title,
+          'Total Borrowing': book.borrowCount
         }
       }
     });
