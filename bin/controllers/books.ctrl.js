@@ -5,6 +5,7 @@ const getBooks = async (req, res, next) => {
   const filter = req.query;
   try {
     const result = await books.getBooks(filter);
+
     res.status(200).json(result);
     //next()
   } catch (e) {
@@ -18,8 +19,8 @@ const verifyNewBook = celebrate({
       title: Joi.string().required(),
       author: Joi.string().required(),
       description: Joi.string(),
-      published: Joi.number().integer(),
-    })
+      published: Joi.number().integer().min(0).max((new Date).getFullYear()).required()
+    }).unknown()
   })
 });
 
@@ -29,8 +30,8 @@ const verifyBook = celebrate({
       title: Joi.string(),
       author: Joi.string(),
       description: Joi.string(),
-      published: Joi.number().integer(),
-    })
+      published: Joi.number().integer().min(0).max((new Date).getFullYear())
+    }).unknown()
   })
 });
 
