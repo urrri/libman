@@ -1,4 +1,4 @@
-const { celebrate, Joi } = require('celebrate');
+const {celebrate, Joi} = require('celebrate');
 const books = require('../services/books.service');
 
 const getBooks = async (req, res, next) => {
@@ -93,7 +93,7 @@ const deleteBook = async (req, res, next) => {
 };
 
 const borrowBook = async (req, res, next) => {
-  const {id:bookId, customerId} = req.params;
+  const {id: bookId, customerId} = req.params;
   try {
     const result = await books.borrowBook(bookId, customerId);
     if (!result) {

@@ -50,7 +50,7 @@ const borrowBook = async (id, customerId) => {
   return updated;
 };
 
-const returnBook = async (id)=> {
+const returnBook = async (id) => {
   if (!await getBook(id)) {
     return;  //404
   }

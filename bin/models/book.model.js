@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Book = new mongoose.Schema({
+const Book = new mongoose.Schema({
   title: {type: String, required: true},
   author: {type: String, required: true},
   description: {type: String, default: ''},
@@ -21,6 +21,6 @@ Book.path('description').validate(function (v) {
   return v.length < 400;
 });
 
-var BookModel = mongoose.model('Book', Book);
+const BookModel = mongoose.model('Book', Book);
 
 module.exports = BookModel;

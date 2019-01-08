@@ -1,13 +1,13 @@
 const express = require('express');
 const path = require('path');
-const { errors } = require('celebrate');
+const {errors} = require('celebrate');
 const config = require('config');
 
 require('dotenv').config();
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_CONNECTION || config.get('db.connectionUri'), {useNewUrlParser: true});
-var db = mongoose.connection;
+const db = mongoose.connection;
 
 db.on('error', function (err) {
   console.error('connection error:', err.message);
@@ -23,7 +23,7 @@ app.use(config.get('api.public'), express.static(path.join(__dirname, '../public
 
 if (config.get('logger.on')) {
   //add logger
-  var morgan = require('morgan');
+  const morgan = require('morgan');
   app.use(morgan('combined'));
 }
 
